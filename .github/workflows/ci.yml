@@ -24,7 +24,7 @@ jobs:
 
       # Ensure the build is finished and files are stable
       - name: Wait for build to finish
-        run: sleep 2  # Optional, just in case any processes are still running
+        run: sleep 10  # Optional, just in case any processes are still running
 
       # Create a tar.gz file of the dist folder
       - name: Create tar.gz of dist folder
