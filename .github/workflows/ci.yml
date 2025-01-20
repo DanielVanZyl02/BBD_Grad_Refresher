@@ -32,9 +32,9 @@ jobs:
       - name: Create Version Tag
         run: npm run release
 
-      - name: Push Changes
-        run: |
-          git push --follow-tags
+      # - name: Push Changes
+      #   run: |
+      #     git push --follow-tags
 
       - name: Build App
         run: npm run build
