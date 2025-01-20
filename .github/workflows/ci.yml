@@ -10,33 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Install dependencies
       - name: Install Dependencies
         run: npm install
 
-      # Build project
       - name: Build project
         run: npm run build
 
-      # # Ensure the build is finished and files are stable
       - name: Wait for build to finish
-        run: sleep 5  # Optional, just in case any processes are still running
+        run: sleep 5
 
-      # - name: Create a stable copy of dist directory
-      #   run: |
-      #     cp -r dist dist_stable
-
-      # Create a zip of the dist folder
       - name: Create ZIP of dist folder
         run: |
           mkdir -p dist
           zip -r dist/dvz_api.zip dist/
 
-      # Upload production artifacts
       - name: Upload production artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -49,14 +39,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code again to get the latest version
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Install version
+        run: npm install --save-dev standard-version
 
       - name: Create Version Tag
         run: npm run release
 
-      # Get the version number from package.json
       - name: Get version from package.json
         id: get_version
         run: |
@@ -68,7 +59,6 @@ jobs:
         with:
           name: dvz_api
 
-      # Create GitHub Release
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -77,9 +67,7 @@ jobs:
         with:
           tag_name: ${{ env.version }}
           release_name: Release ${{ env.version }}
-          body: |
-            ## Changes in this release
-            - Automated release with standard-version
+          body: CHANGELOG.md
           draft: false
           prerelease: false
 
