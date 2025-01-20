@@ -32,15 +32,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Create Version Tag
-        run: npm run release
-
       - name: Get version from package.json
         id: get_version
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_ENV
 
+      - name: Create Version Tag
+        run: npm run release
 
       - name: Build App
         run: npm run build
@@ -64,6 +63,9 @@ jobs:
           body_path: CHANGELOG.md
           draft: false
           prerelease: false
+
+      - name: Wait for build to finish
+        run: sleep 2 
 
       - name: Create tar.gz of dist folder
         run: |
