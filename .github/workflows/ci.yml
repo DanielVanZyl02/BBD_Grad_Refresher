@@ -35,10 +35,6 @@ jobs:
       - name: Create Version Tag
         run: npm run release
 
-      - name: Push Changes
-        run: |
-          git push --follow-tags
-
       - name: Build App
         run: npm run build
 
@@ -61,3 +57,7 @@ jobs:
           body_path: CHANGELOG.md
           draft: false
           prerelease: false
+          
+      - name: Push Changes
+      run: |
+        git push --follow-tags
