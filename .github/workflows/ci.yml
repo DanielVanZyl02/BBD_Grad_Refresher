@@ -33,7 +33,7 @@ jobs:
       # Create a tar.gz file of the dist folder
       - name: Create tar.gz of dist folder
         run: |
-          tar --warning=no-file-changed -czvf dist/dvz_api.tar.gz -C dist .
+          tar --warning=no-file-changed -czvf dist/dvz_api.tar.gz -C dist_stable .
 
       # Upload production artifacts
       - name: Upload production artifacts
