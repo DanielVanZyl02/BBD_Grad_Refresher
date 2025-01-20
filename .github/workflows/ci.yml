@@ -57,7 +57,7 @@ jobs:
           body_path: CHANGELOG.md
           draft: false
           prerelease: false
-          
+
       - name: Push Changes
-      run: |
-        git push --follow-tags
+        run: |
+          git push --follow-tags
