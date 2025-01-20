@@ -48,7 +48,7 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist-without-markdown
+          name: dvz_api
           path: |
             dist
             !dist/**/*.md
@@ -65,15 +65,17 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: upload windows artifact
+      - name: Create tar.gz of dist folder
+        run: |
+          tar -czvf dist/dvz_api.tar.gz -C dist .
+
+      - name: Upload production artifact to release
         uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin/dvz_api.windows-amd64.zip
-          asset_name: dvz_api.windows-amd64.zip
-          asset_content_type: application/zip
+          asset_path: dist/dvz_api.tar.gz
+          asset_name: dvz_api.tar.gz
+          asset_content_type: application/gzip
 
       - name: Push Changes
         run: |
