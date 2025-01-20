@@ -26,58 +26,59 @@ jobs:
       - name: Wait for build to finish
         run: sleep 5  # Optional, just in case any processes are still running
 
-      - name: Create a stable copy of dist directory
-        run: |
-          cp -r dist dist_stable
+      # - name: Create a stable copy of dist directory
+      #   run: |
+      #     cp -r dist dist_stable
 
-      # Create a tar.gz file of the dist folder
-      - name: Create tar.gz of dist folder
+      # Create a zip of the dist folder
+      - name: Create ZIP of dist folder
         run: |
-          tar --warning=no-file-changed -czvf dist/dvz_api.tar.gz -C dist_stable .
+          mkdir -p dist
+          zip -r dist/dvz_api.zip dist/
 
       # Upload production artifacts
       - name: Upload production artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dvz_api
-          path: dist/dvz_api.tar.gz
+          path: dist/dvz_api.zip
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
+  # release:
+  #   needs: build
+  #   runs-on: ubuntu-latest
 
-    steps:
-      # Checkout code again to get the latest version
-      - name: Checkout code
-        uses: actions/checkout@v2
+  #   steps:
+  #     # Checkout code again to get the latest version
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      # Get the version number from package.json
-      - name: Get version from package.json
-        id: get_version
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> $GITHUB_ENV
+  #     # Get the version number from package.json
+  #     - name: Get version from package.json
+  #       id: get_version
+  #       run: |
+  #         VERSION=$(node -p "require('./package.json').version")
+  #         echo "version=$VERSION" >> $GITHUB_ENV
 
-      # Create GitHub Release
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        with:
-          tag_name: ${{ env.version }}
-          release_name: Release ${{ env.version }}
-          body: |
-            ## Changes in this release
-            - Automated release with standard-version
-          draft: false
-          prerelease: false
+  #     # Create GitHub Release
+  #     - name: Create GitHub Release
+  #       id: create_release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+  #       with:
+  #         tag_name: ${{ env.version }}
+  #         release_name: Release ${{ env.version }}
+  #         body: |
+  #           ## Changes in this release
+  #           - Automated release with standard-version
+  #         draft: false
+  #         prerelease: false
 
-      # Upload production artifact to release
-      - name: Upload production artifact to release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/dvz_api.zip
-          asset_name: dvz_api.zip
-          asset_content_type: application/gzip
+  #     # Upload production artifact to release
+  #     - name: Upload production artifact to release
+  #       uses: actions/upload-release-asset@v1
+  #       with:
+  #         upload_url: ${{ steps.create_release.outputs.upload_url }}
+  #         asset_path: dist/dvz_api.zip
+  #         asset_name: dvz_api.zip
+  #         asset_content_type: application/gzip
