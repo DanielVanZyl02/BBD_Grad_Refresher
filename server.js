@@ -12,6 +12,11 @@ app.get('/hello', (req, res) => {
     res.send('Hello ' + req.query.name)
 })
 
+app.get('/funfact', (req, res) => {
+  res.send('CI/CD is fun')
+})
+
+
 app.listen(port, () => {
   // console.log(`App listening on port ${port}`)
 })
