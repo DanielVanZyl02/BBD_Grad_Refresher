@@ -32,9 +32,9 @@ jobs:
       - name: Create Version Tag
         run: npm run release
 
-      # - name: Push Changes
-      #   run: |
-      #     git push --follow-tags
+      - name: Push Changes
+        run: |
+          git push --follow-tags
 
       - name: Build App
         run: npm run build
@@ -53,8 +53,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          release_name: ${{ github.ref_version }}
-          tag_name: ${{ github.ref_version}}
+          release_name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name}}
           body_path: CHANGELOG.md
           draft: false
           prerelease: false
