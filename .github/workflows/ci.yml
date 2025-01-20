@@ -61,7 +61,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_ENV
 
       - name: List Files
-      run: ls -l dist
+        run: ls -l dist
 
       - name: Download zip artifact from the build job
         uses: actions/download-artifact@v4
