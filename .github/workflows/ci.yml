@@ -22,25 +22,25 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # Ensure the build is finished and files are stable
-      - name: Wait for build to finish
-        run: sleep 5  # Optional, just in case any processes are still running
+      # # Ensure the build is finished and files are stable
+      # - name: Wait for build to finish
+      #   run: sleep 5  # Optional, just in case any processes are still running
 
-      - name: Create a stable copy of dist directory
-        run: |
-          cp -r dist dist_stable
+      # - name: Create a stable copy of dist directory
+      #   run: |
+      #     cp -r dist dist_stable
 
-      # Create a tar.gz file of the dist folder
-      - name: Create tar.gz of dist folder
-        run: |
-          tar --warning=no-file-changed -czvf dist/dvz_api.tar.gz -C dist_stable .
+      # # Create a tar.gz file of the dist folder
+      # - name: Create tar.gz of dist folder
+      #   run: |
+      #     tar --warning=no-file-changed -czvf dist/dvz_api.tar.gz -C dist_stable .
 
       # Upload production artifacts
       - name: Upload production artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dvz_api
-          path: dist/dvz_api.tar.gz
+          path: dist/dvz_api.zip
 
   release:
     needs: build
@@ -78,6 +78,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/dvz_api.tar.gz
-          asset_name: dvz_api.tar.gz
+          asset_path: dist/dvz_api.zip
+          asset_name: dvz_api.zip
           asset_content_type: application/gzip
