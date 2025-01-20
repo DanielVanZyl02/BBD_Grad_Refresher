@@ -1,76 +1,75 @@
-name: CI/CD Pipeline
+name: Build and Upload Release Artifacts
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-
-permissions:
-  contents: write 
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22'
-
-      - name: Set Git user name and email
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-
-      - name: Install dependencies
+      # Install dependencies
+      - name: Install Dependencies
         run: npm install
 
+      # Build project
+      - name: Build project
+        run: npm run build
+
+      # Ensure the build is finished and files are stable
+      - name: Wait for build to finish
+        run: sleep 2  # Optional, just in case any processes are still running
+
+      # Create a tar.gz file of the dist folder
+      - name: Create tar.gz of dist folder
+        run: |
+          tar --warning=no-file-changed -czvf dist/dvz_api.tar.gz -C dist .
+
+      # Upload production artifacts
+      - name: Upload production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dvz_api
+          path: dist/dvz_api.tar.gz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code again to get the latest version
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Get the version number from package.json
       - name: Get version from package.json
         id: get_version
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_ENV
 
-      - name: Create Version Tag
-        run: npm run release
-
-      - name: Build App
-        run: npm run build
-
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dvz_api
-          path: |
-            dist
-            !dist/**/*.md
-
-      - name: Create Release
+      # Create GitHub Release
+      - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          release_name: ${{ env.version }}
           tag_name: ${{ env.version }}
-          body_path: CHANGELOG.md
+          release_name: Release ${{ env.version }}
+          body: |
+            ## Changes in this release
+            - Automated release with standard-version
           draft: false
           prerelease: false
 
-      - name: Wait for build to finish
-        run: sleep 2 
-
-      - name: Create tar.gz of dist folder
-        run: |
-          tar -czvf dist/dvz_api.tar.gz -C dist .
-
+      # Upload production artifact to release
       - name: Upload production artifact to release
         uses: actions/upload-release-asset@v1
         with:
@@ -78,7 +77,3 @@ jobs:
           asset_path: dist/dvz_api.tar.gz
           asset_name: dvz_api.tar.gz
           asset_content_type: application/gzip
-
-      - name: Push Changes
-        run: |
-          git push --follow-tags
