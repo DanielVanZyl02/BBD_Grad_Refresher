@@ -44,7 +44,7 @@ jobs:
           path: dist/dvz_api.zip
 
       - name: List Files
-          run: ls -l dist
+        run: ls -l dist
 
   # release:
   #   needs: build
