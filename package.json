@@ -3,7 +3,8 @@
     "start": "node server.js",
     "start-dev": " nodemon server.js",
     "build": "webpack",
-    "prod": "node dist/final.js"
+    "prod": "node dist/final.js",
+    "release": "standard-version"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
@@ -11,6 +12,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.9",
+    "standard-version": "^9.5.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1"
   }
