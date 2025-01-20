@@ -88,6 +88,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/dvz_api.zip
+          asset_path: dvz_api.zip
           asset_name: dvz_api.zip
           asset_content_type: application/zip
