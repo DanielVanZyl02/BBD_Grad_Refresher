@@ -23,17 +23,17 @@ jobs:
         run: npm run build
 
       # # Ensure the build is finished and files are stable
-      # - name: Wait for build to finish
-      #   run: sleep 5  # Optional, just in case any processes are still running
+      - name: Wait for build to finish
+        run: sleep 5  # Optional, just in case any processes are still running
 
-      # - name: Create a stable copy of dist directory
-      #   run: |
-      #     cp -r dist dist_stable
+      - name: Create a stable copy of dist directory
+        run: |
+          cp -r dist dist_stable
 
-      # # Create a tar.gz file of the dist folder
-      # - name: Create tar.gz of dist folder
-      #   run: |
-      #     tar --warning=no-file-changed -czvf dist/dvz_api.tar.gz -C dist_stable .
+      # Create a tar.gz file of the dist folder
+      - name: Create tar.gz of dist folder
+        run: |
+          tar --warning=no-file-changed -czvf dist/dvz_api.tar.gz -C dist_stable .
 
       # Upload production artifacts
       - name: Upload production artifacts
