@@ -53,6 +53,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Create Version Tag
+      run: npm run release
+
       # Get the version number from package.json
       - name: Get version from package.json
         id: get_version
@@ -90,3 +93,7 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} 
+
+      - name: Push Changes
+        run: |
+        git push --follow-tags
