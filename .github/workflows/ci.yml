@@ -38,7 +38,7 @@ jobs:
 
       # Upload production artifacts
       - name: Upload production artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: dvz_api
           path: dist/dvz_api.zip
@@ -58,6 +58,11 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_ENV
+
+      - name: Download zip artifact from the build job
+        uses: actions/download-artifact@v2
+        with:
+          name: dvz_api
 
       # Create GitHub Release
       - name: Create GitHub Release
@@ -81,4 +86,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/dvz_api.zip
           asset_name: dvz_api.zip
-          asset_content_type: application/gzip
+          asset_content_type: application/zip
